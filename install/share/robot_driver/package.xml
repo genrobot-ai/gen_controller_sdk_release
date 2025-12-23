@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>robot_driver</name>
+  <version>1.0.0</version>
+  <description>Robot Driver Package</description>
+  <maintainer email="support@example.com">Robot Driver Team</maintainer>
+  <license>MIT</license>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>cv_bridge</depend>
+  
+  <export>
+    <node pkg="robot_driver" type="camera_view_single.py" name="camera_view_single"/>
+    <node pkg="robot_driver" type="databus_single.py" name="databus_single"/>
+  </export>
+</package>

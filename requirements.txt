@@ -1,0 +1,4 @@
+pyserial
+catkin-pkg
+empy
+opencv-python
