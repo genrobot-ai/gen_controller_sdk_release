@@ -9,17 +9,16 @@ class GripperDataConverter:
         # 初始化节点
         rospy.init_node('das_controller_converter', anonymous=True)
         
-        # 参数设置
-        self.publish_rate = 100 # rospy.get_param('~publish_rate', 50)  # 默认50Hz
+        self.publish_rate = 100
         self.latest_left_data = None
         self.latest_left_cmd = None
         
         # 订阅夹爪的数据
         rospy.Subscriber('/encoder', Float32, self.left_gripper_data_callback)
-        # 创建发布夹爪数据给模型--转换为PoseStamped消息
+        # 发布夹爪数据给模型
         self.left_gripper_feedback_pub = rospy.Publisher('/gripper/left/current_distance', PoseStamped, queue_size=10)      
 
-        # 订阅VR或推理的控制指令,这里需要将distance转换为angle
+        # 订阅VR或推理的控制指令
         rospy.Subscriber('/target_gripper/left_gripper', PoseStamped, self.left_cmd_callback)
         # 然后发布控制指令到夹爪
         self.left_gripper_cmd_pub = rospy.Publisher('/target_distance', Float32, queue_size=10)
@@ -44,12 +43,10 @@ class GripperDataConverter:
             
         pose_msg.header.frame_id = f"{gripper_name}_gripper_frame"
         
-        # 修复：提取Float32消息中的data字段（浮点数）
-        pose_msg.pose.position.x = gripper_msg.data  # 关键修改：添加 .data
+        pose_msg.pose.position.x = gripper_msg.data
         pose_msg.pose.position.y = 0.0
         pose_msg.pose.position.z = 0.0
-        
-        # 设置姿态为单位四元数（无旋转）
+
         pose_msg.pose.orientation.x = 0.0
         pose_msg.pose.orientation.y = 0.0
         pose_msg.pose.orientation.z = 0.0
@@ -58,8 +55,8 @@ class GripperDataConverter:
         # 发布消息
         publisher.publish(pose_msg)
 
-        # 开始标定时使用
-        self.left_gripper_cmd_pub.publish(0.0)
+        # 测试时可使用
+        self.left_gripper_cmd_pub.publish(0.1)
         
         rospy.loginfo(f"Published {gripper_name} feedback distance: {gripper_msg.data}")
 

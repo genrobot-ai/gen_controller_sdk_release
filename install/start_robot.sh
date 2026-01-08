@@ -19,7 +19,7 @@ if [ ${#LAUNCH_FILES[@]} -eq 0 ] || [ ! -f "${LAUNCH_FILES[0]}" ]; then
     exit 1
 fi
 
-LAUNCH_FILE="${LAUNCH_FILES[1]}"
+LAUNCH_FILE="${LAUNCH_FILES[0]}"
 echo "启动: $(basename "$LAUNCH_FILE")"
 
 if [ -z "$ROS_MASTER_URI" ]; then

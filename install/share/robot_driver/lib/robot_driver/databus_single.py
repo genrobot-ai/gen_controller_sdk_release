@@ -45,7 +45,7 @@ def main():
             sys.argv[0] = 'databus_single.py'
             module.main()
         else:
-            print("错误: 找不到main函数")
+            # print("错误: 找不到main函数")
             sys.exit(1)
     except Exception as e:
         print(f"执行错误: {e}")
