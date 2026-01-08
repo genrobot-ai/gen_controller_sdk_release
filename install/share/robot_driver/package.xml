@@ -11,6 +11,7 @@
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>cv_bridge</depend>
+  <depend>pyserial</depend>
   
   <export>
     <node pkg="robot_driver" type="camera_view_single.py" name="camera_view_single"/>
