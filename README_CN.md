@@ -135,3 +135,30 @@ roslaunch robot_driver dual_gripper_start.launch
 python3 script/left_das_controller_infer.py
 python3 script/right_das_controller_infer.py
 ```
+
+## 设备相关参数获取 
+## 单设备模式
+```
+读取必须打开roscore
+bash camera_cmd.sh camerarc  # 获取中间相机标定数据
+bash camera_cmd.sh camerarl  # 获取左边相机标定数据
+bash camera_cmd.sh camerarr  # 获取右边相机标定数据
+bash camera_cmd.sh MCUID     # 获取设备ID
+```
+例如获取设备ID
+![image/image_8.jpg](image/image_8.jpg)
+## 多设备模式
+```
+读取必须打开roscore
+双设备（左右区分）：
+bash camera_cmd.sh left camerarc
+bash camera_cmd.sh left camerarl
+bash camera_cmd.sh left camerarr
+bash camera_cmd.sh left MCUID
+
+bash camera_cmd.sh right camerarc  
+bash camera_cmd.sh right camerarl
+bash camera_cmd.sh right camerarr
+bash camera_cmd.sh right MCUID
+```
+

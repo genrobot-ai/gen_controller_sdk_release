@@ -135,3 +135,30 @@ After startup, six image windows will pop up, and the output topics are:
 python3 script/left_das_controller_infer.py
 python3 script/right_das_controller_infer.py
 ```
+
+## Device-Related Parameter Retrieval
+### Single Device Mode
+```
+roscore must be running to read
+bash camera_cmd.sh camerarc  # Get center camera calibration data
+bash camera_cmd.sh camerarl  # Get left camera calibration data
+bash camera_cmd.sh camerarr  # Get right camera calibration data
+bash camera_cmd.sh MCUID     # Get device ID
+```
+Example of getting device ID:
+![image/image_8.jpg](image/image_8.jpg)
+
+### Multi-Device Mode
+```
+roscore must be running to read
+Two devices (left/right distinction):
+bash camera_cmd.sh left camerarc
+bash camera_cmd.sh left camerarl
+bash camera_cmd.sh left camerarr
+bash camera_cmd.sh left MCUID
+
+bash camera_cmd.sh right camerarc  
+bash camera_cmd.sh right camerarl
+bash camera_cmd.sh right camerarr
+bash camera_cmd.sh right MCUID
+```
