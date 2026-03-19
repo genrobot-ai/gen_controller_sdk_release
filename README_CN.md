@@ -70,17 +70,11 @@ sudo udevadm trigger
 ### 多爪USB口配置
 再次同样添加配置到99-usb-serial.rules中。
 
-## SDK安装
-执行以下指令
-```
-cd genrobot_controller_sdk
-sudo install/install.sh
-```
-
 ## 单爪启动
 ```
-cd genrobot_controller_sdk
-source install/setup.bash
+cd gen_controller_sdk_release
+catkin_make
+source devel/setup.bash
 roslaunch robot_driver single_gripper_start.launch
 ```
 
@@ -106,7 +100,8 @@ python3 script/das_controller_infer.py
 ## 双爪启动
 ```
 cd genrobot_controller_sdk
-source install/setup.bash
+catkin_make
+source devel/setup.bash
 roslaunch robot_driver dual_gripper_start.launch
 ```
 
@@ -136,10 +131,12 @@ python3 script/left_das_controller_infer.py
 python3 script/right_das_controller_infer.py
 ```
 
-## 设备相关参数获取 
+
 ## 单设备模式
 ```
-读取必须打开roscore
+#读取必须打开roscore，但是不能同时运行多个设备指令（包括控制指令）
+roscore
+cd src/robot_driver/scripts/
 bash camera_cmd.sh camerarc  # 获取中间相机标定数据
 bash camera_cmd.sh camerarl  # 获取左边相机标定数据
 bash camera_cmd.sh camerarr  # 获取右边相机标定数据
@@ -149,8 +146,10 @@ bash camera_cmd.sh MCUID     # 获取设备ID
 ![image/image_8.jpg](image/image_8.jpg)
 ## 多设备模式
 ```
-读取必须打开roscore
-双设备（左右区分）：
+  双设备（左右区分）：
+roscore
+cd /src/robot_driver/scripts/
+
 bash camera_cmd.sh left camerarc  # 获取左设备中间相机标定数据
 bash camera_cmd.sh left camerarl  # 获取左设备左边相机标定数据
 bash camera_cmd.sh left camerarr  # 获取左设备右边相机标定数据

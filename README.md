@@ -71,17 +71,11 @@ First, plug in the left gripper and configure it according to the single gripper
 ### Multiple Gripper USB Port Configuration
 Similarly, add configurations to 99-usb-serial.rules.
 
-## SDK Installation
-Execute the following command:
-```
-cd genrobot_controller_sdk
-sudo install/install.sh
-```
-
 ## Single Gripper Startup
 ```
-cd genrobot_controller_sdk
-source install/setup.bash
+cd gen_controller_sdk_release
+catkin_make
+source devel/setup.bash
 roslaunch robot_driver single_gripper_start.launch
 ```
 
@@ -106,7 +100,8 @@ python3 script/das_controller_infer.py
 ## Dual Gripper Startup
 ```
 cd genrobot_controller_sdk
-source install/setup.bash
+catkin_make
+source devel/setup.bash
 roslaunch robot_driver dual_gripper_start.launch
 ```
 
@@ -136,10 +131,12 @@ python3 script/left_das_controller_infer.py
 python3 script/right_das_controller_infer.py
 ```
 
-## Device-Related Parameter Retrieval
-### Single Device Mode
+
+## Single Device Mode
 ```
-roscore must be running to read
+# roscore must be running to read
+roscore
+cd src/robot_driver/scripts/
 bash camera_cmd.sh camerarc  # Get center camera calibration data
 bash camera_cmd.sh camerarl  # Get left camera calibration data
 bash camera_cmd.sh camerarr  # Get right camera calibration data
@@ -148,10 +145,12 @@ bash camera_cmd.sh MCUID     # Get device ID
 Example of getting device ID:
 ![image/image_8.jpg](image/image_8.jpg)
 
-### Multi-Device Mode
+## Multi-Device Mode
 ```
-roscore must be running to read
 Two devices (left/right distinction):
+roscore
+cd /src/robot_driver/scripts/
+
 bash camera_cmd.sh left camerarc  # Get left device center camera calibration data
 bash camera_cmd.sh left camerarl  # Get left device left camera calibration data
 bash camera_cmd.sh left camerarr  # Get left device right camera calibration data

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-    <!-- 设置Python路径 -->
+    <!-- PYTHONPATH for scripts -->
     <env name="PYTHONPATH" value="$(find robot_driver)/scripts:$(env PYTHONPATH)" />
     
-    <!-- 直接指定USB端口 -->
+    <!-- Default USB / serial symlink -->
     <arg name="serial" default="/dev/ttyDeviceLeft" />
     <arg name="camera_resolutions" default="1600x1296" />
     <arg name="show_preview" default="true" />
@@ -20,7 +20,7 @@
         <param name="topic_base" value="camera" />
         <param name="show_preview" value="$(arg show_preview)" />
         <param name="usb_port" value="$(arg serial)" />
-        <param name="camera_count" value="3" />
+        <param name="camera_count" value="1" />
         <param name="video_0_main" value="$(arg video_0_main)" />
         <param name="video_0_sec" value="$(arg video_0_sec)" />
         <param name="video_1_main" value="$(arg video_2_main)" />
