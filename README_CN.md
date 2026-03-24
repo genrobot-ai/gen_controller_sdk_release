@@ -141,6 +141,7 @@ bash camera_cmd.sh camerarc  # 获取中间相机标定数据
 bash camera_cmd.sh camerarl  # 获取左边相机标定数据
 bash camera_cmd.sh camerarr  # 获取右边相机标定数据
 bash camera_cmd.sh MCUID     # 获取设备ID
+python tactile_dual_print.py # 读取触觉数据
 ```
 例如获取设备ID
 ![image/image_8.jpg](image/image_8.jpg)
@@ -154,10 +155,12 @@ bash camera_cmd.sh left camerarc  # 获取左设备中间相机标定数据
 bash camera_cmd.sh left camerarl  # 获取左设备左边相机标定数据
 bash camera_cmd.sh left camerarr  # 获取左设备右边相机标定数据
 bash camera_cmd.sh left MCUID     # 获取左设备ID
+python tactile_dual_print.py  _gripper_ns:=left_gripper  # 读取左侧触觉数据
 
 bash camera_cmd.sh right camerarc  # 获取右设备中间相机标定数据
 bash camera_cmd.sh right camerarl  # 获取右设备左边相机标定数据
 bash camera_cmd.sh right camerarr  # 获取右设备右边相机标定数据
 bash camera_cmd.sh right MCUID     # 获取右设备ID
+python tactile_dual_print.py _gripper_ns:=right_gripper   # 读取右侧触觉数据
 ```
 

@@ -16,6 +16,7 @@ catkin_package(
 install(PROGRAMS
   scripts/camera_view_single.py
   scripts/databus_single.py
+  scripts/tactile_dual_print.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

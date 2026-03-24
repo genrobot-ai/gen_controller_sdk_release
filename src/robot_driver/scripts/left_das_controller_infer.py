@@ -48,7 +48,7 @@ class GripperDataConverter:
         publisher.publish(pose_msg)
 
         # Used during calibration
-        self.left_gripper_cmd_pub.publish(0.05)
+        #self.left_gripper_cmd_pub.publish(0.05)
         
         rospy.loginfo(f"Published {gripper_name} feedback distance: {gripper_msg.data}")
 

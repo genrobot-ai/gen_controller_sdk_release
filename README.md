@@ -141,6 +141,7 @@ bash camera_cmd.sh camerarc  # Get center camera calibration data
 bash camera_cmd.sh camerarl  # Get left camera calibration data
 bash camera_cmd.sh camerarr  # Get right camera calibration data
 bash camera_cmd.sh MCUID     # Get device ID
+python tactile_dual_print.py # Read Tactile Data
 ```
 Example of getting device ID:
 ![image/image_8.jpg](image/image_8.jpg)
@@ -155,9 +156,11 @@ bash camera_cmd.sh left camerarc  # Get left device center camera calibration da
 bash camera_cmd.sh left camerarl  # Get left device left camera calibration data
 bash camera_cmd.sh left camerarr  # Get left device right camera calibration data
 bash camera_cmd.sh left MCUID     # Get left device ID
+python tactile_dual_print.py  _gripper_ns:=left_gripper  # Read left Tactile Data
 
 bash camera_cmd.sh right camerarc  # Get right device center camera calibration data
 bash camera_cmd.sh right camerarl  # Get right device left camera calibration data
 bash camera_cmd.sh right camerarr  # Get right device right camera calibration data
 bash camera_cmd.sh right MCUID     # Get right device ID
+python tactile_dual_print.py _gripper_ns:=right_gripper   # Read right Tactile Data
 ```

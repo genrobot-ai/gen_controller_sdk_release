@@ -756,7 +756,7 @@ def main():
     bus = DataBus(
         tty_port=serial_port,
         baudrate=921600,
-        encoder_freq=50,
+        encoder_freq=30,
         is_calib_cmd=False,
     )
 
