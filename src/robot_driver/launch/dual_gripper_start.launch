@@ -30,7 +30,8 @@
             <param name="topic_base" value="camera" />
             <param name="show_preview" value="$(arg show_preview)" />
             <param name="usb_port" value="$(arg left_serial)" />
-            <param name="camera_count" value="1" />
+            <param name="camera_count" value="3" />
+            <param name="fps" value="30" />
             <param name="video_0_main" value="$(arg left_video_0_main)" />
             <param name="video_0_sec" value="$(arg left_video_0_sec)" />
             <param name="video_1_main" value="$(arg left_video_2_main)" />
@@ -57,7 +58,8 @@
             <param name="topic_base" value="camera" />
             <param name="show_preview" value="$(arg show_preview)" />
             <param name="usb_port" value="$(arg right_serial)" />
-            <param name="camera_count" value="1" />
+            <param name="camera_count" value="3" />
+            <param name="fps" value="30" />
             <param name="video_0_main" value="$(arg right_video_0_main)" />
             <param name="video_0_sec" value="$(arg right_video_0_sec)" />
             <param name="video_1_main" value="$(arg right_video_2_main)" />

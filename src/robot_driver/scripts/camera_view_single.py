@@ -56,7 +56,7 @@ class CameraCaptureROS:
         self.show_preview = rospy.get_param('~show_preview', True)
         
         # Parse resolution list
-        resolutions_str = rospy.get_param('~resolutions', "640x480,320x240,800x600")
+        resolutions_str = rospy.get_param('~resolutions', "640x480,320x240,800x600, 1024x768,1280x720,1280x1024,1280x960,1600x1296 ")
         self.resolutions = []
         for res_str in resolutions_str.split(','):
             try:
@@ -66,13 +66,26 @@ class CameraCaptureROS:
                 rospy.logwarn(f"Cannot parse resolution string: {res_str}")
         
         if not self.resolutions:
-            self.resolutions = [(640, 480), (320, 240), (800, 600)]
+            self.resolutions = [(640, 480), (320, 240), (800, 600), (1024, 768), (1280, 720), (1280, 1024), (1280, 960), (1600, 1296)]
         
         self.topic_base = rospy.get_param('~topic_base', '/camera_fisheye')
         
         # launch may pass camera_count as string
         self.max_cameras = int(rospy.get_param('~camera_count', 3))
         
+        # Camera frame rate
+        self.fps = int(rospy.get_param('~fps', 30))
+
+        # Publish resolution (software resize, keeps full FOV)
+        publish_res_str = rospy.get_param('~publish_resolution', '')
+        self.publish_resolution = None
+        if publish_res_str:
+            try:
+                pw, ph = map(int, publish_res_str.strip().split('x'))
+                self.publish_resolution = (pw, ph)
+            except:
+                rospy.logwarn(f"Cannot parse publish_resolution: {publish_res_str}")
+
         # USB port filter for v4l devices
         self.usb_port = rospy.get_param('~usb_port', '')
 
@@ -238,6 +251,7 @@ class CameraCaptureROS:
                     return False
 
                 cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M','J','P','G'))
+                cap.set(cv2.CAP_PROP_FPS, self.fps)
                 
                 # Try requested resolutions
                 success = False
@@ -281,7 +295,14 @@ class CameraCaptureROS:
                     'frame_count': 0,
                     'width': actual_width,
                     'height': actual_height,
-                    'window_name': window_name
+                    'window_name': window_name,
+                    'lock': threading.Lock(),
+                    'latest_frame': None,
+                    'latest_ts_ns': 0,
+                    'cap_fps_ts': [],
+                    'cap_fps_val': 0.0,
+                    'pub_fps_ts': [],
+                    'pub_fps_val': 0.0,
                 })
                 return True
 
@@ -315,18 +336,9 @@ class CameraCaptureROS:
 
     def _init_main_or_second_camera(self, dev_main, dev_second, index):
         if self._init_camera(dev_main, index):
-            # rospy.loginfo(f"Initialized {dev_main} as {self.cameras[-1]['unique_id']}")
-            pass
-        else:
-            # rospy.logwarn(f"Skip device {dev_main}")
-            pass
-
+            return
         if self._init_camera(dev_second, index):
-            # rospy.loginfo(f"Initialized {dev_second} as {self.cameras[-1]['unique_id']}")
-            pass
-        else:
-            # rospy.logwarn(f"Skip device {dev_second}")
-            pass
+            return
 
     def _init_ros_publishers(self):
         """Create ROS image publishers."""
@@ -352,6 +364,55 @@ class CameraCaptureROS:
                 'topic_name': topic_name
             })
             # rospy.loginfo(f"Camera {cam['unique_id']} -> {topic_name}")
+
+    def _sync_grab_loop(self):
+        while self.running:
+            grab_results = {}
+            for cam in self.cameras:
+                grab_results[cam['id']] = cam['cap'].grab()
+
+            now = time.monotonic()
+            ts_ns = time.time_ns()
+
+            for cam in self.cameras:
+                if not grab_results[cam['id']]:
+                    continue
+                ret, frame = cam['cap'].retrieve()
+                if not ret or frame is None:
+                    continue
+
+                self._publish_frame(cam['id'], frame, ts_ns)
+                cam['frame_count'] += 1
+
+                with cam['lock']:
+                    cam['latest_frame'] = frame
+                    cam['latest_ts_ns'] = ts_ns
+
+                cam['cap_fps_ts'].append(now)
+                if len(cam['cap_fps_ts']) > 30:
+                    cam['cap_fps_ts'] = cam['cap_fps_ts'][-30:]
+                if len(cam['cap_fps_ts']) >= 2:
+                    dt = cam['cap_fps_ts'][-1] - cam['cap_fps_ts'][0]
+                    if dt > 0:
+                        cam['cap_fps_val'] = (len(cam['cap_fps_ts']) - 1) / dt
+
+    def _start_grab_threads(self):
+        t = threading.Thread(target=self._sync_grab_loop, daemon=True)
+        self._grab_thread = t
+        t.start()
+
+    def _stop_grab_threads(self):
+        self.running = False
+        t = getattr(self, '_grab_thread', None)
+        if t and t.is_alive():
+            t.join(timeout=3)
+
+    def _get_latest(self, cam):
+        with cam['lock']:
+            frame = cam['latest_frame']
+            ts_ns = cam['latest_ts_ns']
+            cam['latest_frame'] = None
+        return frame, ts_ns
 
     def _publish_frame(self, cam_id, frame, timestamp_ns):
         """Publish one frame to ROS Image topic."""
@@ -404,8 +465,11 @@ class CameraCaptureROS:
                 # Overlay timestamp and frame count
                 timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 info_text = f"{cam['unique_id']} | {timestamp} | Frames: {cam['frame_count']}"
-                cv2.putText(frame, info_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 
+                cv2.putText(frame, info_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
                           0.7, (0, 255, 0), 2)
+                fps_text = f"Cap: {cam['cap_fps_val']:.1f}  Disp: {cam['pub_fps_val']:.1f}"
+                cv2.putText(frame, fps_text, (10, 60), cv2.FONT_HERSHEY_SIMPLEX,
+                          0.7, (0, 255, 255), 2)
                 
                 cv2.imshow(cam['window_name'], frame)
         
@@ -414,63 +478,55 @@ class CameraCaptureROS:
             self.running = False
 
     def capture_frames(self):
-        # rospy.loginfo(f"Capturing from {len(self.cameras)} camera(s)...")
-        # rospy.loginfo("ESC or Ctrl+C to stop")
-        
-        # Preview windows
         if self.show_preview:
             for cam in self.cameras:
                 RESIZE_WIDTH = 640
                 RESIZE_HEIGHT = 480
-                # Unique OpenCV window name
                 cv2.namedWindow(cam['window_name'], cv2.WINDOW_NORMAL)
                 cv2.resizeWindow(cam['window_name'], RESIZE_WIDTH, RESIZE_HEIGHT)
-        
+
+        self._start_grab_threads()
+
         frame_num = 0
-        rate = rospy.Rate(30)  # 30Hz
-        
+        rate = rospy.Rate(self.fps)
+
         try:
             while self.running and not rospy.is_shutdown():
                 frames_data = []
-                timestamp_ns = time.time_ns()
-                
+
                 for cam in self.cameras:
-                    ret, frame = cam['cap'].read()
-                    if not ret:
-                        # rospy.logwarn(f"Camera {cam['unique_id']} frame {frame_num} grab failed")
-                        frame = None
-                    else:
-                        # ROS publish
-                        self._publish_frame(cam['id'], frame, timestamp_ns)
-                        cam['frame_count'] += 1
-                    
+                    frame, ts_ns = self._get_latest(cam)
+                    if frame is not None:
+                        now = time.monotonic()
+                        cam['pub_fps_ts'].append(now)
+                        if len(cam['pub_fps_ts']) > 30:
+                            cam['pub_fps_ts'] = cam['pub_fps_ts'][-30:]
+                        if len(cam['pub_fps_ts']) >= 2:
+                            dt = cam['pub_fps_ts'][-1] - cam['pub_fps_ts'][0]
+                            if dt > 0:
+                                cam['pub_fps_val'] = (len(cam['pub_fps_ts']) - 1) / dt
+
                     frames_data.append((cam, frame))
-                
+
                 if self.show_preview:
                     self._display_frames(frames_data)
-                
-                # if frame_num % 30 == 0:
-                #     status = " | ".join([f"{cam['unique_id']}:{cam['frame_count']}f" for cam in self.cameras])
-                #     rospy.loginfo(f"frame {frame_num+1} | {status}")
-                
+
                 frame_num += 1
                 rate.sleep()
-                
+
         except Exception as e:
             rospy.logerr(f"Capture error: {e}")
         finally:
             self._release_resources()
-            # self._generate_report()
 
     def _release_resources(self):
-        """Release cameras and windows."""
+        """Stop grab threads, release cameras and windows."""
+        self._stop_grab_threads()
         for cam in self.cameras:
             try:
                 cam['cap'].release()
             except:
                 pass
-        
-        # Close this node's preview windows
         if self.show_preview:
             for cam in self.cameras:
                 try:
