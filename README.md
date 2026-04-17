@@ -142,6 +142,7 @@ bash camera_cmd.sh camerarl  # Get left camera calibration data
 bash camera_cmd.sh camerarr  # Get right camera calibration data
 bash camera_cmd.sh MCUID     # Get device ID
 python tactile_dual_print.py # Read Tactile Data
+<param name="fps" value="30" />  #When using the V4 Controller, set the FPS to 60; otherwise, you will only get 15 FPS. (For units shipped after April 2026)
 ```
 Example of getting device ID:
 ![image/image_8.jpg](image/image_8.jpg)
@@ -163,4 +164,5 @@ bash camera_cmd.sh right camerarl  # Get right device left camera calibration da
 bash camera_cmd.sh right camerarr  # Get right device right camera calibration data
 bash camera_cmd.sh right MCUID     # Get right device ID
 python tactile_dual_print.py _gripper_ns:=right_gripper   # Read right Tactile Data
+<param name="fps" value="30" />  #When using the V4 Controller, set the FPS to 60; otherwise, you will only get 15 FPS. (For units shipped after April 2026)
 ```
