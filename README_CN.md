@@ -32,6 +32,11 @@ cd /dev && ls | grep ttyUSB
 udevadm info -a -n /dev/ttyUSB* | grep -E "KERNELS|DRIVERS"
 ```
 
+如果获取不到串口，执行下面指令：
+```
+sudo apt remove brltty
+```
+
 将输出中的第二个KERNELS数值配置到1处:  
 ![image/image_3.png](image/image_3.png)
 

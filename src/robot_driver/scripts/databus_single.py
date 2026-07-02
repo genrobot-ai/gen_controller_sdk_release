@@ -280,6 +280,8 @@ class DataBus:
         # Camera calib flag / name (e.g. MCUID prints payload between das\\r\\n)
         self.is_calib_cmd = is_calib_cmd  # default False
         self.calib_cmd_name = calib_cmd_name  # e.g. "MCUID"
+        if calib_cmd_name:
+            os.environ["CALIB_CMD_NAME"] = calib_cmd_name
         self.tactile_callback = tactile_callback
         self.encoder_callback = encoder_callback
         self.echo_callback = echo_callback
@@ -490,12 +492,20 @@ class DataBus:
                     for packet in packets:
                         if self.is_calib_cmd:
                             magic = DASProtocol.MAGIC  # b"das\r\n"
-                            if self.calib_cmd_name == "MCUID" and len(packet) > 2 * len(magic) and packet.startswith(magic) and packet.endswith(magic):
-                                middle = packet[len(magic):-len(magic)]
+                            if (
+                                len(packet) > 2 * len(magic)
+                                and packet.startswith(magic)
+                                and packet.endswith(magic)
+                            ):
+                                middle = packet[len(magic) : -len(magic)]
                                 try:
-                                    print("MCUID:", middle.decode("ascii"))
+                                    text = middle.decode("ascii")
                                 except Exception:
-                                    print("MCUID:", middle.hex())
+                                    text = middle.hex()
+                                if self.calib_cmd_name == "MCUID":
+                                    print("MCUID:", text)
+                                else:
+                                    print(f"Device response ({self.calib_cmd_name}): {text}")
                                 self.is_calib_cmd = False
                                 continue
                             camera_pack = MessagePack.unpack_camera_calib(packet)
@@ -507,6 +517,19 @@ class DataBus:
                                     self.camera_calib_callback(camera_pack)
                                 # Optional: clear calib flag after response
                                 self.is_calib_cmd = False
+                                continue
+
+                            pack = MessagePack.unpack(packet)
+                            if pack:
+                                for record in pack.records_:
+                                    if record.record_type == RecordType.Echo:
+                                        try:
+                                            text = record.record_data.decode("utf-8")
+                                        except Exception:
+                                            text = record.record_data.hex()
+                                        print(f"Device response ({self.calib_cmd_name}): {text}")
+                                        self.is_calib_cmd = False
+                                        break
                         else:
                             pack = MessagePack.unpack(packet)
                             # print("pack_normal: ", pack)
@@ -568,7 +591,7 @@ class DataBus:
         interval = 1.0 / self.tactile_freq
         print(f"Tactile loop started, {self.tactile_freq} Hz, interval {interval:.3f}s")
         
-        while self.is_running and not rospy.is_shutdown():
+        while self._should_run():
             start_time = time.time()
             self.add_cmd(
                 CmdPack.pack(opcode=Opcode.ReadSingle, record_type=RecordType.Tactile, record=struct.pack(">f", 0.0))
@@ -581,6 +604,18 @@ class DataBus:
                 time.sleep(sleep_time)
 
         print("Tactile loop thread exiting")
+
+    def wait_for_calib_response(self, timeout=3.0, poll_interval=0.05):
+        """Wait until calib response is received or timeout expires."""
+        if not self.is_calib_cmd:
+            return True
+        print("Waiting for device response...")
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            if not self.is_calib_cmd:
+                return True
+            time.sleep(poll_interval)
+        return not self.is_calib_cmd
 
     def stop(self):
         """Stop all threads."""

@@ -32,6 +32,12 @@ cd /dev && ls | grep ttyUSB
 udevadm info -a -n /dev/ttyUSB* | grep -E "KERNELS|DRIVERS"
 ```
 
+If the serial port cannot be detected:
+
+```
+sudo apt remove brltty
+```
+
 Configure the second KERNELS value from the output to Parameter 1:  
 ![image/image_3.png](image/image_3.png)
 
