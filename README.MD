@@ -5,6 +5,7 @@
 [中文](README(ZH).MD)
 
 [GitHub repository](https://github.com/genrobot-ai/gen_controller_sdk_release)
+
 License: MIT
 
 ## 1 Features
@@ -232,13 +233,12 @@ python3 tactile_dual_print.py _gripper_ns:=right_gripper
 | User Manual           | [DAS Controller User Manual](https://docs.genrobot.ai/en/products/das-controller)        |
 | URDF                  | [URDF Model](https://zcnma1sv5kma.feishu.cn/wiki/CKpbwye45iOlrckukIPc5hKCndh)            |
 | Troubleshooting Guide | [Problem Solving Guide](https://zcnma1sv5kma.feishu.cn/docx/E6VJdNqIfoGrSDxKIHKck7tLn3b) |
-| USB 配置 (ZH)           | [docs/usb-setup_CN.md](docs/usb-setup_CN.md)                                             |
+| USB setup (ZH)           | [docs/usb-setup_CN.md](docs/usb-setup_CN.md)                                             |
 | USB setup (EN)        | [docs/usb-setup.md](docs/usb-setup.md)                                                   |
 | udev rules template   | [config/99-usb-serial.rules](config/99-usb-serial.rules)                                 |
 | Single gripper launch | [single_gripper_start.launch](src/robot_driver/launch/single_gripper_start.launch)       |
 | Dual gripper launch   | [dual_gripper_start.launch](src/robot_driver/launch/dual_gripper_start.launch)           |
 | Demo scripts          | [src/robot_driver/scripts/](src/robot_driver/scripts/)                                   |
-| Changelog             | [CHANGELOG.MD](CHANGELOG.MD)                                                             |
 
 
 

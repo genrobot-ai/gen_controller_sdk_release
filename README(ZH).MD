@@ -5,6 +5,7 @@
 [English](README.MD)
 
 [GitHub代码](https://github.com/genrobot-ai/gen_controller_sdk_release)
+
 License: MIT
 
 ## 1 功能特性
@@ -236,7 +237,6 @@ python3 tactile_dual_print.py _gripper_ns:=right_gripper
 | 单爪 launch      | [single_gripper_start.launch](src/robot_driver/launch/single_gripper_start.launch) |
 | 双爪 launch      | [dual_gripper_start.launch](src/robot_driver/launch/dual_gripper_start.launch)     |
 | Demo 脚本        | [src/robot_driver/scripts/](src/robot_driver/scripts/)                             |
-| 更新日志           | [CHANGELOG.MD](CHANGELOG.MD)                                                       |
 
 
 
