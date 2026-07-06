@@ -2,9 +2,9 @@
 
 > ROS1 driver for Gen Controller gripper — camera streaming, tactile sensing, encoder feedback, and distance control.
 
-[中文](README(ZH).MD) | [CHANGELOG](./CHANGELOG.MD)
+[中文](README(ZH).MD)
 
-[GitHub](https://github.com/genrobot-ai/gen_controller_sdk_release)
+[GitHub repository](https://github.com/genrobot-ai/gen_controller_sdk_release)
 License: MIT
 
 ## 1 Features
@@ -19,16 +19,14 @@ License: MIT
 ## 2 Requirements
 
 
-| Item | Requirement |
-| ---- | ----------- |
-| OS | Ubuntu 20.04 (recommended) |
-| ROS | ROS1 Noetic |
-| Python | 3.8+ |
-| USB | USB 3.0 port |
+| Item     | Requirement                   |
+| -------- | ----------------------------- |
+| OS       | Ubuntu 20.04 (recommended)    |
+| ROS      | ROS1 Noetic                   |
+| Python   | 3.8+                          |
+| USB      | USB 3.0 port                  |
 | Hardware | Gen Controller gripper device |
 
-
-> **V4 Controller note:** For units shipped after April 2026, set `fps` to `60` in the launch file for 30 FPS camera frame rate.
 
 
 
@@ -63,15 +61,15 @@ rostopic pub /target_distance std_msgs/Float32 "data: 0.05"
 ### 4.1 Single Gripper
 
 
-| Topic | Type | Direction | Description |
-| ----- | ---- | --------- | ----------- |
-| `/camera/color/image_raw` | `sensor_msgs/Image` | publish | Center camera |
-| `/camera_1/color/image_raw` | `sensor_msgs/Image` | publish | Left-side camera |
-| `/camera_2/color/image_raw` | `sensor_msgs/Image` | publish | Right-side camera |
-| `/encoder` | `std_msgs/Float32` | publish | Gripper opening distance feedback (m) |
-| `/tactile/left` | `std_msgs/Int8MultiArray` | publish | Left tactile sensor |
-| `/tactile/right` | `std_msgs/Int8MultiArray` | publish | Right tactile sensor |
-| `/target_distance` | `std_msgs/Float32` | subscribe | Target opening distance, range `[0.0, 0.103]` |
+| Topic                       | Type                      | Direction | Description                                   |
+| --------------------------- | ------------------------- | --------- | --------------------------------------------- |
+| `/camera/color/image_raw`   | `sensor_msgs/Image`       | publish   | Center camera                                 |
+| `/camera_1/color/image_raw` | `sensor_msgs/Image`       | publish   | Left-side camera                              |
+| `/camera_2/color/image_raw` | `sensor_msgs/Image`       | publish   | Right-side camera                             |
+| `/encoder`                  | `std_msgs/Float32`        | publish   | Gripper opening distance feedback (m)         |
+| `/tactile/left`             | `std_msgs/Int8MultiArray` | publish   | Left tactile sensor                           |
+| `/tactile/right`            | `std_msgs/Int8MultiArray` | publish   | Right tactile sensor                          |
+| `/target_distance`          | `std_msgs/Float32`        | subscribe | Target opening distance, range `[0.0, 0.103]` |
 
 
 
@@ -81,12 +79,12 @@ rostopic pub /target_distance std_msgs/Float32 "data: 0.05"
 All topics are prefixed with `/left_gripper` or `/right_gripper`. For example:
 
 
-| Topic | Type | Direction | Description |
-| ----- | ---- | --------- | ----------- |
-| `/left_gripper/encoder` | `std_msgs/Float32` | publish | Left gripper opening feedback |
-| `/left_gripper/target_distance` | `std_msgs/Float32` | subscribe | Left gripper target distance |
-| `/right_gripper/encoder` | `std_msgs/Float32` | publish | Right gripper opening feedback |
-| `/right_gripper/target_distance` | `std_msgs/Float32` | subscribe | Right gripper target distance |
+| Topic                            | Type               | Direction | Description                    |
+| -------------------------------- | ------------------ | --------- | ------------------------------ |
+| `/left_gripper/encoder`          | `std_msgs/Float32` | publish   | Left gripper opening feedback  |
+| `/left_gripper/target_distance`  | `std_msgs/Float32` | subscribe | Left gripper target distance   |
+| `/right_gripper/encoder`         | `std_msgs/Float32` | publish   | Right gripper opening feedback |
+| `/right_gripper/target_distance` | `std_msgs/Float32` | subscribe | Right gripper target distance  |
 
 
 Camera and tactile topics follow the same namespace pattern (`/left_gripper/camera/...`, `/left_gripper/tactile/...`, etc.).
@@ -215,13 +213,13 @@ python3 tactile_dual_print.py _gripper_ns:=right_gripper
 ## 8 Troubleshooting
 
 
-| Problem | Solution |
-| ------- | -------- |
-| Serial port not found | Run `sudo apt remove brltty`, then replug the device |
-| Camera or serial has wrong path | Re-check udev rules; see [docs/usb-setup.md](docs/usb-setup.md) |
-| Low camera frame rate on V4 Controller | Set `<param name="fps" value="60" />` in the launch file |
-| No ROS data | Ensure `roscore` is running and udev rules are loaded |
-| `catkin_make` fails | Confirm ROS Noetic is sourced: `source /opt/ros/noetic/setup.bash` |
+| Problem                         | Solution                                                           |
+| ------------------------------- | ------------------------------------------------------------------ |
+| Serial port not found           | Run `sudo apt remove brltty`, then replug the device               |
+| Camera or serial has wrong path | Re-check udev rules; see [docs/usb-setup.md](docs/usb-setup.md)    |
+| V4 Controller frame rate halved | Set `<param name="fps" value="60" />` in the launch file           |
+| No ROS data                     | Ensure `roscore` is running and udev rules are loaded              |
+| `catkin_make` fails             | Confirm ROS Noetic is sourced: `source /opt/ros/noetic/setup.bash` |
 
 
 
@@ -229,18 +227,18 @@ python3 tactile_dual_print.py _gripper_ns:=right_gripper
 ## 9 Documentation
 
 
-| Description | Link |
-| ----------- | ---- |
-| User Manual | [DAS Controller User Manual](https://docs.genrobot.ai/en/products/das-controller) |
-| URDF | [URDF Model](https://zcnma1sv5kma.feishu.cn/wiki/CKpbwye45iOlrckukIPc5hKCndh) |
+| Description           | Link                                                                                     |
+| --------------------- | ---------------------------------------------------------------------------------------- |
+| User Manual           | [DAS Controller User Manual](https://docs.genrobot.ai/en/products/das-controller)        |
+| URDF                  | [URDF Model](https://zcnma1sv5kma.feishu.cn/wiki/CKpbwye45iOlrckukIPc5hKCndh)            |
 | Troubleshooting Guide | [Problem Solving Guide](https://zcnma1sv5kma.feishu.cn/docx/E6VJdNqIfoGrSDxKIHKck7tLn3b) |
-| USB 配置 (ZH) | [docs/usb-setup_CN.md](docs/usb-setup_CN.md) |
-| USB setup (EN) | [docs/usb-setup.md](docs/usb-setup.md) |
-| udev rules template | [config/99-usb-serial.rules](config/99-usb-serial.rules) |
-| Single gripper launch | [single_gripper_start.launch](src/robot_driver/launch/single_gripper_start.launch) |
-| Dual gripper launch | [dual_gripper_start.launch](src/robot_driver/launch/dual_gripper_start.launch) |
-| Demo scripts | [src/robot_driver/scripts/](src/robot_driver/scripts/) |
-| Changelog | [CHANGELOG.MD](CHANGELOG.MD) |
+| USB 配置 (ZH)           | [docs/usb-setup_CN.md](docs/usb-setup_CN.md)                                             |
+| USB setup (EN)        | [docs/usb-setup.md](docs/usb-setup.md)                                                   |
+| udev rules template   | [config/99-usb-serial.rules](config/99-usb-serial.rules)                                 |
+| Single gripper launch | [single_gripper_start.launch](src/robot_driver/launch/single_gripper_start.launch)       |
+| Dual gripper launch   | [dual_gripper_start.launch](src/robot_driver/launch/dual_gripper_start.launch)           |
+| Demo scripts          | [src/robot_driver/scripts/](src/robot_driver/scripts/)                                   |
+| Changelog             | [CHANGELOG.MD](CHANGELOG.MD)                                                             |
 
 
 
@@ -248,4 +246,3 @@ python3 tactile_dual_print.py _gripper_ns:=right_gripper
 ## 10 License
 
 Licensed under the [MIT License](LICENSE.txt).
-

@@ -2,9 +2,9 @@
 
 > 用于 Gen Controller 夹爪的 ROS1 驱动，支持相机图像、触觉传感、编码器反馈及开合距离控制。
 
-[English](README.MD) | [CHANGELOG](./CHANGELOG.MD)
+[English](README.MD)
 
-[GitHub](https://github.com/genrobot-ai/gen_controller_sdk_release)
+[GitHub代码](https://github.com/genrobot-ai/gen_controller_sdk_release)
 License: MIT
 
 ## 1 功能特性
@@ -27,12 +27,8 @@ License: MIT
 | USB    | USB 3.0 接口          |
 | 硬件     | Gen Controller 夹爪设备 |
 
-
-> **V4 Controller 说明：** 2026 年 4 月之后发货的设备，需在 launch 文件中将 `fps` 设为 `60`，相机帧率到 30fps。
-
-
-
 ## 3 快速开始
+
 
 > 首次使用请先完成 [USB 配置](docs/usb-setup_CN.md)。
 
@@ -219,7 +215,7 @@ python3 tactile_dual_print.py _gripper_ns:=right_gripper
 | ----------------- | --------------------------------------------------------- |
 | 找不到串口             | 执行 `sudo apt remove brltty`，重新插拔设备                        |
 | 相机或串口路径不对         | 检查 udev 规则，见 [docs/usb-setup_CN.md](docs/usb-setup_CN.md) |
-| V4 Controller 帧率低 | 在 launch 文件中设置 `<param name="fps" value="60" />`          |
+| V4 Controller 帧率减半 | 在 launch 文件中设置 `<param name="fps" value="60" />`          |
 | 无 ROS 数据          | 确认 `roscore` 已启动且 udev 规则已加载                              |
 | `catkin_make` 失败  | 确认已 source ROS：`source /opt/ros/noetic/setup.bash`        |
 
