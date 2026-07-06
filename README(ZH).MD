@@ -1,4 +1,4 @@
-# Gen Controller SDK
+# Gen Gripper Controller SDK
 
 > 用于 Gen Controller 夹爪的 ROS1 驱动，支持相机图像、触觉传感、编码器反馈及开合距离控制。
 
@@ -6,7 +6,7 @@
 
 [GitHub代码](https://github.com/genrobot-ai/gen_controller_sdk_release)
 
-License: MIT
+License: [MIT License](LICENSE.txt)
 
 ## 1 功能特性
 
@@ -239,9 +239,4 @@ python3 tactile_dual_print.py _gripper_ns:=right_gripper
 | Demo 脚本        | [src/robot_driver/scripts/](src/robot_driver/scripts/)                             |
 
 
-
-
-## 10 许可
-
-采用 [MIT License](LICENSE.txt) 许可。
 

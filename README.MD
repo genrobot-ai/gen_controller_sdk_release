@@ -1,4 +1,4 @@
-# Gen Controller SDK
+# Gen Gripper Controller SDK
 
 > ROS1 driver for Gen Controller gripper — camera streaming, tactile sensing, encoder feedback, and distance control.
 
@@ -6,7 +6,7 @@
 
 [GitHub repository](https://github.com/genrobot-ai/gen_controller_sdk_release)
 
-License: MIT
+License: [MIT License](LICENSE.txt)
 
 ## 1 Features
 
@@ -240,9 +240,3 @@ python3 tactile_dual_print.py _gripper_ns:=right_gripper
 | Dual gripper launch   | [dual_gripper_start.launch](src/robot_driver/launch/dual_gripper_start.launch)           |
 | Demo scripts          | [src/robot_driver/scripts/](src/robot_driver/scripts/)                                   |
 
-
-
-
-## 10 License
-
-Licensed under the [MIT License](LICENSE.txt).
