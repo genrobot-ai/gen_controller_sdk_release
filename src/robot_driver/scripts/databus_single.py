@@ -492,6 +492,20 @@ class DataBus:
                     for packet in packets:
                         if self.is_calib_cmd:
                             magic = DASProtocol.MAGIC  # b"das\r\n"
+                            is_camera_cmd = (
+                                self.calib_cmd_name
+                                and self.calib_cmd_name.startswith("camera")
+                            )
+
+                            # Camera calib uses das\\r\\n framing but carries protobuf payload.
+                            if is_camera_cmd:
+                                camera_pack = MessagePack.unpack_camera_calib(packet)
+                                if camera_pack:
+                                    if self.camera_calib_callback:
+                                        self.camera_calib_callback(camera_pack)
+                                    self.is_calib_cmd = False
+                                    continue
+
                             if (
                                 len(packet) > 2 * len(magic)
                                 and packet.startswith(magic)
@@ -508,16 +522,14 @@ class DataBus:
                                     print(f"Device response ({self.calib_cmd_name}): {text}")
                                 self.is_calib_cmd = False
                                 continue
-                            camera_pack = MessagePack.unpack_camera_calib(packet)
-                            
-                            if camera_pack:
-                                # print(f"camera_pack received: {camera_pack}")
-                                # Camera calibration payload
-                                if self.camera_calib_callback:
-                                    self.camera_calib_callback(camera_pack)
-                                # Optional: clear calib flag after response
-                                self.is_calib_cmd = False
-                                continue
+
+                            if not is_camera_cmd:
+                                camera_pack = MessagePack.unpack_camera_calib(packet)
+                                if camera_pack:
+                                    if self.camera_calib_callback:
+                                        self.camera_calib_callback(camera_pack)
+                                    self.is_calib_cmd = False
+                                    continue
 
                             pack = MessagePack.unpack(packet)
                             if pack:
