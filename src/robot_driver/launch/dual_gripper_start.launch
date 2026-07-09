@@ -6,6 +6,8 @@
     <!-- Default left/right serial symlinks -->
     <arg name="left_serial" default="/dev/ttyDeviceLeft" />
     <arg name="right_serial" default="/dev/ttyDeviceRight" />
+    <arg name="left_gripper_type" default="default_gripper" />
+    <arg name="right_gripper_type" default="default_gripper" />
     <arg name="camera_resolutions" default="1600x1296" />
     <!-- <arg name="camera_resolutions" default="640x480" /> -->
     <arg name="show_preview" default="true" />
@@ -43,6 +45,7 @@
         <node name="das_node" pkg="robot_driver" type="databus_single.py" output="screen" launch-prefix="bash -c 'sleep 3; $0 $@' ">
             <env name="PYTHONPATH" value="$(find robot_driver)/scripts:$(env PYTHONPATH)" />
             <param name="serial_port" value="$(arg left_serial)" />
+            <param name="gripper_type" value="$(arg left_gripper_type)" />
             <param name="topic_left_tactile" value="tactile/left" />
             <param name="topic_right_tactile" value="tactile/right" />
             <param name="topic_encoder" value="encoder" />
@@ -72,6 +75,7 @@
         <node name="das_node" pkg="robot_driver" type="databus_single.py" output="screen" launch-prefix="bash -c 'sleep 5; $0 $@' ">
             <env name="PYTHONPATH" value="$(find robot_driver)/scripts:$(env PYTHONPATH)" />
             <param name="serial_port" value="$(arg right_serial)" />
+            <param name="gripper_type" value="$(arg right_gripper_type)" />
             <param name="topic_left_tactile" value="tactile/left" />
             <param name="topic_right_tactile" value="tactile/right" />
             <param name="topic_encoder" value="encoder" />

@@ -47,9 +47,17 @@ roslaunch robot_driver single_gripper_start.launch
 # 终端 2 — 读取编码器反馈
 rostopic echo /encoder
 
-# 终端 3 — 设置目标开合 5 cm（范围：0.0 ~ 0.103 m）
+# 终端 3 — 设置目标开合 5 cm
 rostopic pub /target_distance std_msgs/Float32 "data: 0.05"
 ```
+
+在 launch 命令中选择夹爪类型。不同夹爪的最大打开后距离如下：
+
+| 夹爪类型 | 最大打开后距离 |
+| --- | ---: |
+| `default_gripper` | `0.103` m |
+| `tactile_gripper` | `0.0998` m |
+| `soft_gripper` | `0.103` m |
 
 
 
@@ -68,7 +76,7 @@ rostopic pub /target_distance std_msgs/Float32 "data: 0.05"
 | `/encoder`                  | `std_msgs/Float32`        | 发布  | 夹爪开合距离反馈（m）              |
 | `/tactile/left`             | `std_msgs/Int8MultiArray` | 发布  | 左侧触觉                     |
 | `/tactile/right`            | `std_msgs/Int8MultiArray` | 发布  | 右侧触觉                     |
-| `/target_distance`          | `std_msgs/Float32`        | 订阅  | 目标开合距离，范围 `[0.0, 0.103]` |
+| `/target_distance`          | `std_msgs/Float32`        | 订阅  | 目标开合距离，不超过所选夹爪类型上限 |
 
 
 
@@ -145,6 +153,8 @@ source /path/to/gen_controller_sdk_release/devel/setup.bash
 ```shell
 source devel/setup.bash
 roslaunch robot_driver single_gripper_start.launch
+roslaunch robot_driver single_gripper_start.launch gripper_type:=tactile_gripper
+roslaunch robot_driver single_gripper_start.launch gripper_type:=soft_gripper
 ```
 
 默认弹出三个预览窗口。关闭预览：
@@ -160,6 +170,7 @@ roslaunch robot_driver single_gripper_start.launch show_preview:=false
 ```shell
 source devel/setup.bash
 roslaunch robot_driver dual_gripper_start.launch
+roslaunch robot_driver dual_gripper_start.launch left_gripper_type:=tactile_gripper right_gripper_type:=default_gripper
 ```
 
 运行 demo 脚本，将模型指令桥接到夹爪话题：

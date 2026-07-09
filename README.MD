@@ -49,9 +49,17 @@ Verify feedback and send a control command:
 # Terminal 2 — read encoder feedback
 rostopic echo /encoder
 
-# Terminal 3 — set target opening to 5 cm (range: 0.0 ~ 0.103 m)
+# Terminal 3 — set target opening to 5 cm
 rostopic pub /target_distance std_msgs/Float32 "data: 0.05"
 ```
+
+Select the gripper type in the launch command. The maximum opening distance depends on the gripper:
+
+| Gripper type | Maximum opening distance |
+| --- | ---: |
+| `default_gripper` | `0.103` m |
+| `tactile_gripper` | `0.0998` m |
+| `soft_gripper` | `0.103` m |
 
 
 
@@ -70,7 +78,7 @@ rostopic pub /target_distance std_msgs/Float32 "data: 0.05"
 | `/encoder`                  | `std_msgs/Float32`        | publish   | Gripper opening distance feedback (m)         |
 | `/tactile/left`             | `std_msgs/Int8MultiArray` | publish   | Left tactile sensor                           |
 | `/tactile/right`            | `std_msgs/Int8MultiArray` | publish   | Right tactile sensor                          |
-| `/target_distance`          | `std_msgs/Float32`        | subscribe | Target opening distance, range `[0.0, 0.103]` |
+| `/target_distance`          | `std_msgs/Float32`        | subscribe | Target opening distance; keep within the selected gripper type limit |
 
 
 
@@ -147,6 +155,8 @@ Default serial symlinks after dual-gripper setup: `/dev/ttyDeviceLeft`, `/dev/tt
 ```shell
 source devel/setup.bash
 roslaunch robot_driver single_gripper_start.launch
+roslaunch robot_driver single_gripper_start.launch gripper_type:=tactile_gripper
+roslaunch robot_driver single_gripper_start.launch gripper_type:=soft_gripper
 ```
 
 Three preview windows appear by default. Disable preview:
@@ -162,6 +172,7 @@ roslaunch robot_driver single_gripper_start.launch show_preview:=false
 ```shell
 source devel/setup.bash
 roslaunch robot_driver dual_gripper_start.launch
+roslaunch robot_driver dual_gripper_start.launch left_gripper_type:=tactile_gripper right_gripper_type:=default_gripper
 ```
 
 Run demo scripts to bridge model commands to gripper topics:

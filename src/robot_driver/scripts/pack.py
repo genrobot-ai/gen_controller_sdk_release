@@ -114,6 +114,7 @@ class CmdPack(Pack):
         opcode: Opcode,
         record_type: RecordType,
         record=b"",
+        gripper_type="default_gripper",
     ):
         record_content_length = len(record)
 
@@ -123,7 +124,7 @@ class CmdPack(Pack):
         packet += struct.pack("B", record_type.value)
         # packet += struct.pack("<Q", record_content_length)  # <Q little-endian uint64
         packet += struct.pack(">I", record_content_length)  # >I big-endian uint32
-        packet += struct.pack("B", 0)
+        packet += struct.pack("B", cls._gripper_type_byte(gripper_type))
         packet += struct.pack("B", 0)
         # packet += struct.pack("B", 0)
         # packet += struct.pack("B", 0)
@@ -137,6 +138,11 @@ class CmdPack(Pack):
         return CmdPack(
             data=packet, opcode=opcode, record_data=record, record_type=record_type
         )
+
+    @staticmethod
+    def _gripper_type_byte(gripper_type) -> int:
+        gripper_type = (gripper_type or "default_gripper").lower()
+        return 0x04 if gripper_type in ("tactile_gripper", "soft_gripper") else 0x00
     
     @classmethod
     def pack_calib(

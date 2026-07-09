@@ -5,6 +5,7 @@
     
     <!-- Default USB / serial symlink -->
     <arg name="serial" default="/dev/ttyDeviceLeft" />
+    <arg name="gripper_type" default="default_gripper" />
     <arg name="camera_resolutions" default="1600x1296" />
     <arg name="show_preview" default="true" />
     <arg name="video_0_main" default="/dev/left_video_0_main" />
@@ -33,6 +34,7 @@
     <node name="das_node" pkg="robot_driver" type="databus_single.py" output="screen" launch-prefix="bash -c 'sleep 3; $0 $@' ">
         <env name="PYTHONPATH" value="$(find robot_driver)/scripts:$(env PYTHONPATH)" />
         <param name="serial_port" value="$(arg serial)" />
+        <param name="gripper_type" value="$(arg gripper_type)" />
         <param name="topic_left_tactile" value="tactile/left" />
         <param name="topic_right_tactile" value="tactile/right" />
         <param name="topic_encoder" value="encoder" />
