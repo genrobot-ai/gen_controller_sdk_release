@@ -29,6 +29,14 @@ License: [MIT License](LICENSE.txt)
 | Hardware | Gen Controller gripper device |
 
 
+## Important Notes
+
+Before operating the gripper, observe the following:
+
+1. **Initial Calibration**: On first command, ensure the gripper is unobstructed (calibration code: -66.66).
+2. **Power Supply**: Error code -6.6 indicates unpowered motor. Connect 24V power to the XT30 connector.
+3. **Power Cycle Recalibration**: After power loss and restart, recalibration is required. Remove any objects from the gripper before power restoration.
+4. **Power Cycle Delay**: Wait at least 3 seconds after power-off before powering on the motor again. Avoid rapid power cycling to prevent motor damage.
 
 
 ## 3 Quick Start
