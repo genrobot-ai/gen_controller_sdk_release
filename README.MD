@@ -218,15 +218,28 @@ cd src/robot_driver/scripts/
 bash camera_cmd.sh left camerarc
 bash camera_cmd.sh left camerarl
 bash camera_cmd.sh left camerarr
+bash camera_cmd.sh left camerar2c
+bash camera_cmd.sh left camerar2l
+bash camera_cmd.sh left camerar2r
 bash camera_cmd.sh left MCUID
+bash camera_cmd.sh left VERSION
 python3 tactile_dual_print.py _gripper_ns:=left_gripper
 
 bash camera_cmd.sh right camerarc
 bash camera_cmd.sh right camerarl
 bash camera_cmd.sh right camerarr
+bash camera_cmd.sh right camerar2c
+bash camera_cmd.sh right camerar2l
+bash camera_cmd.sh right camerar2r
 bash camera_cmd.sh right MCUID
+bash camera_cmd.sh right VERSION
 python3 tactile_dual_print.py _gripper_ns:=right_gripper
 ```
+
+Notes:
+- `camerarl`, `camerarc`, `camerarr` are for `640x480` calibration files.
+- `camerar2l`, `camerar2c`, `camerar2r` are for `1600x1296` calibration files.
+- `VERSION` can query the current software version. If no response is returned, the device firmware/software is too old.
 
 
 

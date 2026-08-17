@@ -201,10 +201,14 @@ python3 right_das_controller_infer.py
 ```shell
 roscore
 cd src/robot_driver/scripts/
-bash camera_cmd.sh camerarc   # 中间相机标定
-bash camera_cmd.sh camerarl   # 左侧相机标定
-bash camera_cmd.sh camerarr   # 右侧相机标定
+bash camera_cmd.sh camerarc   # 640x480 中间相机标定
+bash camera_cmd.sh camerarl   # 640x480 左侧相机标定
+bash camera_cmd.sh camerarr   # 640x480 右侧相机标定
+bash camera_cmd.sh camerar2c  # 1600x1296 中间相机标定
+bash camera_cmd.sh camerar2l  # 1600x1296 左侧相机标定
+bash camera_cmd.sh camerar2r  # 1600x1296 右侧相机标定
 bash camera_cmd.sh MCUID      # 设备 ID
+bash camera_cmd.sh VERSION    # 查询当前软件/固件版本
 python3 tactile_dual_print.py # 打印触觉数据
 ```
 
@@ -217,15 +221,28 @@ cd src/robot_driver/scripts/
 bash camera_cmd.sh left camerarc
 bash camera_cmd.sh left camerarl
 bash camera_cmd.sh left camerarr
+bash camera_cmd.sh left camerar2c
+bash camera_cmd.sh left camerar2l
+bash camera_cmd.sh left camerar2r
 bash camera_cmd.sh left MCUID
+bash camera_cmd.sh left VERSION
 python3 tactile_dual_print.py _gripper_ns:=left_gripper
 
 bash camera_cmd.sh right camerarc
 bash camera_cmd.sh right camerarl
 bash camera_cmd.sh right camerarr
+bash camera_cmd.sh right camerar2c
+bash camera_cmd.sh right camerar2l
+bash camera_cmd.sh right camerar2r
 bash camera_cmd.sh right MCUID
+bash camera_cmd.sh right VERSION
 python3 tactile_dual_print.py _gripper_ns:=right_gripper
 ```
+
+说明：
+- `camerarl`、`camerarc`、`camerarr` 是 `640x480` 分辨率下的标定文件。
+- `camerar2l`、`camerar2c`、`camerar2r` 是 `1600x1296` 分辨率下的标定文件。
+- `VERSION` 可查询当前软件版本；如果查询不到，说明版本过旧。
 
 
 

@@ -7,22 +7,28 @@ set -euo pipefail
 #     bash camera_cmd.sh camerarc
 #     bash camera_cmd.sh camerarl
 #     bash camera_cmd.sh camerarr
+#     bash camera_cmd.sh camerar2c
+#     bash camera_cmd.sh camerar2l
+#     bash camera_cmd.sh camerar2r
 #     bash camera_cmd.sh MCUID
 #     bash camera_cmd.sh DMZEROSET
+#     bash camera_cmd.sh VERSION
 #   Dual device (left/right):
 #     bash camera_cmd.sh left camerarc
 #     bash camera_cmd.sh right camerarl
 #     bash camera_cmd.sh right camerarr
 #     bash camera_cmd.sh left DMZEROSET
+#     bash camera_cmd.sh right VERSION
 # Optional: set SERIAL_PORT to force a device; otherwise auto-find /dev/ttyUSB*.
+# Notes: camerarl/camerarc/camerarr -> 640x480; camerar2l/camerar2c/camerar2r -> 1600x1296.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export PYTHONPATH="${SCRIPT_DIR}:${PYTHONPATH:-}"
 
 usage() {
   echo "Usage:"
-  echo "  Single: bash ${BASH_SOURCE[0]} {1234|camerarc|camerarl|camerarr|MCUID|DMZEROSET}"
-  echo "  Dual:   bash ${BASH_SOURCE[0]} {left|right} {camerarc|camerarl|camerarr|MCUID|DMZEROSET|1234}"
+  echo "  Single: bash ${BASH_SOURCE[0]} {1234|camerarc|camerarl|camerarr|camerar2c|camerar2l|camerar2r|MCUID|DMZEROSET|VERSION}"
+  echo "  Dual:   bash ${BASH_SOURCE[0]} {left|right} {1234|camerarc|camerarl|camerarr|camerar2c|camerar2l|camerar2r|MCUID|DMZEROSET|VERSION}"
   echo "Optional env: SERIAL_PORT=/dev/ttyUSB0"
   exit 1
 }
@@ -44,10 +50,10 @@ fi
 
 # Validate RECORD_VALUE
 case "${RECORD_VALUE}" in
-  1234|camerarc|camerarl|camerarr|MCUID|DMZEROSET)
+  1234|camerarc|camerarl|camerarr|camerar2c|camerar2l|camerar2r|MCUID|DMZEROSET|VERSION)
     ;;
   *)
-    echo "Error: second argument must be one of 1234/camerarc/camerarl/camerarr/MCUID/DMZEROSET"
+    echo "Error: second argument must be one of 1234/camerarc/camerarl/camerarr/camerar2c/camerar2l/camerar2r/MCUID/DMZEROSET/VERSION"
     usage
     ;;
 esac
@@ -72,6 +78,12 @@ elif [[ "${RECORD_VALUE}" == "camerarl" ]]; then
   yaml_filename="cam1_sensor.yaml"
 elif [[ "${RECORD_VALUE}" == "camerarr" ]]; then
   yaml_filename="cam2_sensor.yaml"
+elif [[ "${RECORD_VALUE}" == "camerar2c" ]]; then
+  yaml_filename="cam0_sensor_r2.yaml"
+elif [[ "${RECORD_VALUE}" == "camerar2l" ]]; then
+  yaml_filename="cam1_sensor_r2.yaml"
+elif [[ "${RECORD_VALUE}" == "camerar2r" ]]; then
+  yaml_filename="cam2_sensor_r2.yaml"
 fi
 
 if [[ -n "${SIDE}" && -n "${yaml_filename}" ]]; then
@@ -116,8 +128,8 @@ bus = DataBus(tty_port=serial_port, baudrate=921600, is_calib_cmd=True, calib_cm
 time.sleep(1.0)
 bus.add_cmd(CmdPack.pack_calib(record=record_bytes))
 
-if record_value in ("MCUID", "DMZEROSET"):
-    bus.wait_for_calib_response(timeout=3.0)
+if record_value in ("MCUID", "DMZEROSET", "VERSION"):
+  bus.wait_for_calib_response(timeout=3.0)
 elif record_value.startswith("camera"):
     bus.wait_for_calib_response(timeout=2.0)
 else:
@@ -128,7 +140,9 @@ bus.stop()
 if record_value == "1234":
     print("Calibration OK !")
 elif record_value == "MCUID":
-    print("MCUID query executed")
+  print("MCUID query executed")
+elif record_value == "VERSION":
+  print("VERSION query executed")
 elif record_value == "DMZEROSET":
     print("DMZEROSET command executed")
 else:

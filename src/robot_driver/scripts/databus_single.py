@@ -523,6 +523,8 @@ class DataBus:
                                     text = middle.hex()
                                 if self.calib_cmd_name == "MCUID":
                                     print("MCUID:", text)
+                                elif self.calib_cmd_name == "VERSION":
+                                    print("VERSION:", text)
                                 else:
                                     print(f"Device response ({self.calib_cmd_name}): {text}")
                                 self.is_calib_cmd = False
